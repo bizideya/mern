@@ -1,26 +1,58 @@
-import express, {request, Request, Response} from 'express'
-
+import express, { Request, Response,NextFunction} from 'express'
 const app = express()
 
-const port = 8000;
-
-app.use('/sum/:a/:b', (request: Request, response: Response)=>{
-    const {params: {a, b}} = request
-    const sum = Number(a) + Number(b)
-    response.status(200).send('La somme de ${a} + ${b} egale à: ${sum}')
-})
+const port = 3000;
 
 
-app.use('/operation/:a/:b',(request : Request ,reponse :Response)=>{
-  const{ params:{operation,a,b}}=request
-
-    
+const middleware = (req: Request,res: Response, next:NextFunction) => {
+    const op = req.query.op;
+    const a = req.query.n1;
+    const b = req.query.n2;
   
+    if (op=='DIV' && b==0) {
+      res.status(400).send( "erreur ");
+    }
+    next()
+  };
 
-})
 
+
+  const Handler = ( req: Request, response: Response,next: NextFunction) => {
+    const operation = req.query.op;
+    const a = req.query.n1;
+    const b = req.query.n2;
+    switch (operation) {
+        case 'ADD' :
+            const sum =Number(a) +Number(b)
+      response.status(200).send(`la somme de ${a} + ${b} egale :${sum} `)
+            break;
+
+        case 'MULT':
+            const sum2 =Number(a) *  Number(b)
+            response.status(200).send(`la multiplication  de ${a} * ${b} egale :${sum2} `)
+            break;
+
+         case 'DIV' :
+         const sum3=Number(a) +Number(b)
+      response.status(200).send(`la division de ${a} / ${b} egale :${sum3} `)
+            break;
+            case 'MIN' :
+                const sum4=Number(a) +Number(b)
+             response.status(200).send(`la division de ${a} - ${b} egale :${sum4} `)
+                   break;
+            default:
+                response.status(400).send(`mauvaise choix :l'operation doit etre DIV, MIN,MULT,ADD`)
+
+    } 
+
+  
+  };
+ 
+ 
+app.use("/calc",middleware,Handler);
+  
 
 
 app.listen(port, ()=>{
-    console.log('Server listening on port ${port}')
+    console.log(`Server listening on port ${port}`)
 })
