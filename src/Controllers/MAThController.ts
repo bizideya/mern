@@ -1,7 +1,13 @@
-import express, { Request, Response,NextFunction} from 'express'
-const app = express()
-import {ValidateParms} from '../Middleware/ValidateParms';
-import{Handler }from '../Services/MathService';
+import { Request, Response } from 'express'
+import { calculate } from '../Services/MathService'
 
-app.use("/calc",ValidateParms,Handler);
+
+export const calcul = (req: Request, res: Response) =>{
+    try {
+        const { number1,  number2, operation } = req.qury;
+        return res.status(200).send(calculate(number1, number2, operation))
+    } catch (error) {
+        
+    }
+}
 

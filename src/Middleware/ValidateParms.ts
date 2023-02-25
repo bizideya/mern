@@ -4,7 +4,7 @@ const middleware = (req: Request,res: Response, next:NextFunction) => {
     const a = req.query.n1;
     const b = req.query.n2;
   
-    if (op=='DIV' && b==0) {
+    if (a === undefined || b === undefined || op === undefined) {
       res.status(400).send( "erreur ");
     }
     next()
